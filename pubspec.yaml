@@ -5,7 +5,7 @@ author: Kwang Yul Seo <kwangyul.seo@gmail.com>
 homepage: https://github.com/kseo/bit_vector
 
 environment:
-  sdk: '>=1.0.0 <2.0.0'
+  sdk: '>=1.8.0 <2.0.0'
 
 dependencies:
   fixnum: ^0.10.5
