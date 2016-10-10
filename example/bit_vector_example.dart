@@ -4,6 +4,10 @@
 import 'package:bit_vector/bit_vector.dart';
 
 main() {
-  var awesome = new Awesome();
-  print('awesome: ${awesome.isAwesome}');
+  BitVector v = new BitVector();
+  v.set(68);
+  print(v.get(68)); // true
+  v.toggle(68);
+  print(v.get(68)); // false
 }
+

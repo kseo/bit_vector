@@ -7,8 +7,8 @@ homepage: https://github.com/kseo/bit_vector
 environment:
   sdk: '>=1.0.0 <2.0.0'
 
-#dependencies:
-#  lib_name: any
+dependencies:
+  fixnum: ^0.10.5
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
