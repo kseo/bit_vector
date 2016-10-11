@@ -32,6 +32,15 @@ class BitVector {
             new Int64(_words[_wordsInUse - 1]).numberOfLeadingZeros());
   }
 
+  /// The number of bits set to true in this [BitVector].
+  int get cardinality {
+    int sum = 0;
+    for (var i = 0; i < _wordsInUse; i++) {
+      sum += _bitCount(_words[i]);
+    }
+    return sum;
+  }
+
   /// Creates a bit set whose initial length is [length].
   BitVector([int length = _bitsPerWord]) {
     if (length < 0)
@@ -154,5 +163,16 @@ class BitVector {
       _words = new Int64List(request)..setRange(0, _words.length, _words);
     }
   }
+}
+
+// Assumes i is <= 64-bit.
+int _bitCount(int i) {
+  i = i - ((i >> 1) & 0x5555555555555555);
+  i = (i & 0x3333333333333333) + ((i >> 2) & 0x3333333333333333);
+  i = (i + (i >> 4)) & 0x0f0f0f0f0f0f0f0f;
+  i = i + (i >> 8);
+  i = i + (i >> 16);
+  i = i + (i >> 32);
+  return i & 0x7f;
 }
 

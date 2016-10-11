@@ -101,5 +101,27 @@ void main() {
 
       expect(failCount, 0);
     });
+
+    test('cardinality', () {
+      int failCount = 0;
+
+      for (var i = 0; i < 100; i++) {
+        BitVector b1 = new BitVector(256);
+
+        // Set a random number of increasing bits
+        int nextBitToSet = 0;
+        int iterations = generator.nextInt(20) + 1;
+        for (var x = 0; x < iterations; x++) {
+          nextBitToSet += generator.nextInt(20) + 1;
+          b1.set(nextBitToSet);
+        }
+
+        if (b1.cardinality != iterations) {
+          failCount++;
+        }
+      }
+
+      expect(failCount, 0);
+    });
   });
 }
