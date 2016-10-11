@@ -128,6 +128,29 @@ void main() {
       expect(failCount, 0);
     });
 
+    test('length', () {
+      int failCount = 0;
+
+      // Test length after set
+      for (int i = 0; i < 100; i++) {
+        BitVector b1 = new BitVector(256);
+        int highestSetBit = 0;
+
+        for (var x = 0; x < 100; x++) {
+          int nextBitToSet = generator.nextInt(255);
+          if (nextBitToSet > highestSetBit) {
+            highestSetBit = nextBitToSet;
+          }
+          b1.set(nextBitToSet);
+          if (b1.length != highestSetBit + 1) {
+            failCount++;
+          }
+        }
+      }
+
+      expect(failCount, 0);
+    });
+
     test('cardinality', () {
       int failCount = 0;
 
