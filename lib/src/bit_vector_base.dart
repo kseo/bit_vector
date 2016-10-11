@@ -21,6 +21,12 @@ class BitVector {
 
   int _wordsInUse = 0;
 
+  /// True if this [BitVector] contains no bits that are set to true.
+  bool get isEmpty => _wordsInUse == 0;
+
+  /// True if this [BitVector] contains any bit that is set to true.
+  bool get isNotEmpty => !isEmpty;
+
   /// The "logical size" of this [BitVector]: the index of the highest set bit
   /// in the [BitVector] plus one. Returns zero if the [BitVector] contains no
   /// set bits.
@@ -175,4 +181,3 @@ int _bitCount(int i) {
   i = i + (i >> 32);
   return i & 0x7f;
 }
-

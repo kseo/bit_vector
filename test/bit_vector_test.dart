@@ -102,6 +102,32 @@ void main() {
       expect(failCount, 0);
     });
 
+    test('empty', () {
+      int failCount = 0;
+
+      BitVector b1 = new BitVector();
+      if (b1.isNotEmpty) {
+        failCount++;
+      }
+
+      int nextBitToSet = 0;
+      int numberOfSetBits = generator.nextInt(100) + 1;
+      int highestPossibleSetBit = generator.nextInt(1000) + 1;
+      for (var x = 0; x < numberOfSetBits; x++) {
+        nextBitToSet = generator.nextInt(highestPossibleSetBit);
+        b1.set(nextBitToSet);
+        if (b1.isEmpty) {
+          failCount++;
+        }
+        b1.clear(nextBitToSet);
+        if (b1.isNotEmpty) {
+          failCount++;
+        }
+      }
+
+      expect(failCount, 0);
+    });
+
     test('cardinality', () {
       int failCount = 0;
 
