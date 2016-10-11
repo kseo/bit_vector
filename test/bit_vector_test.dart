@@ -8,10 +8,15 @@ import 'package:test/test.dart';
 
 Random generator = new Random();
 
+void checkEquality(BitVector s, BitVector t) {
+  expect(s, equals(t));
+  expect(s.length, equals(t.length));
+}
+
 void main() {
   group('BitVector', () {
-    int failCount = 0;
     test('test set/get/clear/toggle', () {
+      int failCount = 0;
       for (int i = 0; i < 100; i++) {
         BitVector testVector = new BitVector();
         Set<int> history = new Set<int>();
@@ -41,11 +46,9 @@ void main() {
 
         // Verify they were cleared
         for (int x = 0; x < highestPossibleSetBit; x++) {
-          if (testVector.get(x))
-            failCount++;
+          if (testVector.get(x)) failCount++;
         }
-        if (testVector.length != 0)
-          failCount++;
+        if (testVector.length != 0) failCount++;
 
         // Flip them on
         for (final setBit in history) {
@@ -66,14 +69,37 @@ void main() {
 
         // Verify they were flipped
         for (int x = 0; x < highestPossibleSetBit; x++) {
-          if (testVector.get(x))
-            failCount++;
+          if (testVector.get(x)) failCount++;
         }
-        if (testVector.length != 0)
-          failCount++;
+        if (testVector.length != 0) failCount++;
       }
+      expect(failCount, 0);
+    });
+
+    test('equality', () {
+      int failCount = 0;
+
+      for (var i = 0; i < 100; i++) {
+        // Create BitSets of different sizes
+        BitVector b1 = new BitVector(generator.nextInt(1000) + 1);
+        BitVector b2 = new BitVector(generator.nextInt(1000) + 1);
+
+        // Set some random bits
+        int nextBitToSet = 0;
+        for (var x = 0; x < 10; x++) {
+          nextBitToSet += generator.nextInt(50) + 1;
+          b1.set(nextBitToSet);
+          b2.set(nextBitToSet);
+        }
+
+        // Verify their equality despite different storage sizes
+        if (b1 != b2) {
+          failCount++;
+        }
+        checkEquality(b1, b2);
+      }
+
       expect(failCount, 0);
     });
   });
 }
-

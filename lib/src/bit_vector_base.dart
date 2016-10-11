@@ -101,6 +101,34 @@ class BitVector {
   /// Given a bit index, returns word index containing it.
   int _wordIndex(int bitIndex) => bitIndex >> _addressBitsPerWord;
 
+  @override
+  int get hashCode {
+    const mask = 0xFFFFFFFF;
+    int h = 1234;
+    for (int i = _wordsInUse; --i >= 0;) {
+      h ^= (_words[i] * (i + 1)) & mask;
+    }
+    return (h >> 32) ^ h;
+  }
+
+  @override
+  bool operator ==(other) {
+    if (other is! BitVector) return false;
+    if (identical(this, other)) return true;
+
+    if (_wordsInUse != other._wordsInUse) {
+      return false;
+    }
+
+    for (var i = 0; i < _wordsInUse; i++) {
+      if (_words[i] != other._words[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   void _recalculateWordsInUse() {
     int i;
     for (i = _wordsInUse - 1; i >= 0; i--) {
