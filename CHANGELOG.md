@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Breaking change - change `get` method to `[]` operator
+
 ## 0.2.0
 
 - Add `isEmpty` and `isNotEmpty` getters
