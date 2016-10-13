@@ -15,7 +15,7 @@ void checkEquality(BitVector s, BitVector t) {
 
 void main() {
   group('BitVector', () {
-    test('test set/get/clear/toggle', () {
+    test('test []/set/clear/toggle', () {
       int failCount = 0;
       for (int i = 0; i < 100; i++) {
         BitVector testVector = new BitVector();
@@ -34,7 +34,7 @@ void main() {
 
         // Make sure each bit is set appropriately
         for (int x = 0; x < highestPossibleSetBit; x++) {
-          if (testVector.get(x) != history.contains(x)) {
+          if (testVector[x] != history.contains(x)) {
             failCount++;
           }
         }
@@ -46,7 +46,7 @@ void main() {
 
         // Verify they were cleared
         for (int x = 0; x < highestPossibleSetBit; x++) {
-          if (testVector.get(x)) failCount++;
+          if (testVector[x]) failCount++;
         }
         if (testVector.length != 0) failCount++;
 
@@ -57,7 +57,7 @@ void main() {
 
         // Verify they were flipped
         for (int x = 0; x < highestPossibleSetBit; x++) {
-          if (testVector.get(x) != history.contains(x)) {
+          if (testVector[x] != history.contains(x)) {
             failCount++;
           }
         }
@@ -69,7 +69,7 @@ void main() {
 
         // Verify they were flipped
         for (int x = 0; x < highestPossibleSetBit; x++) {
-          if (testVector.get(x)) failCount++;
+          if (testVector[x]) failCount++;
         }
         if (testVector.length != 0) failCount++;
       }

@@ -60,13 +60,14 @@ class BitVector {
   }
 
   /// Tests if the bit at the specified index is set.
-  bool get(int bitIndex) {
+  bool operator [](int bitIndex) {
     if (bitIndex < 0)
       throw new ArgumentError.value(bitIndex, 'bitIndex', 'bitIndex < 0');
 
     int wordIndex = _wordIndex(bitIndex);
     return (wordIndex < _wordsInUse) &&
         ((_words[wordIndex] & (1 << (bitIndex & _bitMask)) != 0));
+
   }
 
   /// Sets the bit at the specified index to true.
