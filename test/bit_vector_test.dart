@@ -8,10 +8,20 @@ import 'package:test/test.dart';
 
 Random generator = new Random();
 
+BitVector makeVector(Iterable<int> elements) {
+  final BitVector b = new BitVector();
+  for (int element in elements) {
+    b.set(element);
+  }
+  return b;
+}
+
 void checkEquality(BitVector s, BitVector t) {
   expect(s, equals(t));
   expect(s.length, equals(t.length));
 }
+
+bool boolXor(bool x, bool y) => (x && !y) || (!x && y);
 
 void main() {
   group('BitVector', () {
@@ -172,5 +182,163 @@ void main() {
 
       expect(failCount, 0);
     });
+
+    test('andNot', () {
+      int failCount = 0;
+
+      for (var i = 0; i < 100; i++) {
+        BitVector b1 = new BitVector(256);
+        BitVector b2 = new BitVector(256);
+
+        for (var x = 0; x < 10; x++) {
+          b1.set(generator.nextInt(255));
+        }
+
+        for (var x = 0; x < 10; x++) {
+          b2.set(generator.nextInt(255));
+        }
+
+        // andNot the sets together
+        BitVector b3 = new BitVector.from(b1);
+        b3.andNot(b2);
+
+        // Examine each bit of b3 for errors
+        for (var x = 0; x < 256; x++) {
+          bool bit1 = b1[x];
+          bool bit2 = b2[x];
+          bool bit3 = b3[x];
+          if (!(bit3 == (bit1 && (!bit2)))) {
+            failCount++;
+          }
+        }
+      }
+
+      expect(failCount, 0);
+    });
+
+    test('and', () {
+      int failCount = 0;
+
+      for (var i = 0; i < 100; i++) {
+        BitVector b1 = new BitVector(256);
+        BitVector b2 = new BitVector(256);
+
+        for (var x = 0; x < 10; x++) {
+          b1.set(generator.nextInt(255));
+        }
+
+        for (var x = 0; x < 10; x++) {
+          b2.set(generator.nextInt(255));
+        }
+
+        // And the sets together
+        BitVector b3 = new BitVector.from(b1);
+        b3.and(b2);
+
+        // Examine each bit of b3 for errors
+        for (var x = 0; x < 256; x++) {
+          bool bit1 = b1[x];
+          bool bit2 = b2[x];
+          bool bit3 = b3[x];
+          if (!(bit3 == (bit1 && bit2))) {
+            failCount++;
+          }
+        }
+      }
+
+      // `and' that happens to clear the last word
+      BitVector b4 = makeVector([2, 127]);
+      b4.and(makeVector([2, 64]));
+      if (!(b4 == makeVector([2]))) {
+        failCount++;
+      }
+
+      expect(failCount, 0);
+    });
+
+    test('or', () {
+      int failCount = 0;
+
+      for (var i = 0; i < 100; i++) {
+        BitVector b1 = new BitVector(256);
+        BitVector b2 = new BitVector(256);
+        List<int> history = new List<int>(20);
+
+        // Set some random bits in first set and remember them
+        int nextBitToSet = 0;
+        for (var x = 0; x < 10; x++) {
+          nextBitToSet = generator.nextInt(255);
+          history[x] = nextBitToSet;
+          b1.set(nextBitToSet);
+        }
+
+        // Set more random bits in second set and remember them
+        for (int x = 10; x < 20; x++) {
+          nextBitToSet = generator.nextInt(255);
+          history[x] = nextBitToSet;
+          b2.set(nextBitToSet);
+        }
+
+        // Or the sets together
+        BitVector b3 = new BitVector.from(b1);
+        b3.or(b2);
+
+        // Verify the set bits of b3 from the history
+        for (int x = 0; x < 20; x++) {
+          if (!b3[history[x]]) {
+            failCount++;
+          }
+        }
+
+        // Examine each bit of b3 for errors
+        for (var x = 0; x < 256; x++) {
+          bool bit1 = b1[x];
+          bool bit2 = b2[x];
+          bool bit3 = b3[x];
+          if (!(bit3 == (bit1 || bit2))) {
+            failCount++;
+          }
+        }
+      }
+
+      expect(failCount, 0);
+    });
+
+    test('xor', () {
+      int failCount = 0;
+
+      for (var i = 0; i < 100; i++) {
+        BitVector b1 = new BitVector(256);
+        BitVector b2 = new BitVector(256);
+
+        int nextBitToSet = 0;
+        for (var x = 0; x < 10; x++) {
+          nextBitToSet = generator.nextInt(255);
+          b1.set(nextBitToSet);
+        }
+
+        for (int x = 0; x < 10; x++) {
+          nextBitToSet = generator.nextInt(255);
+          b2.set(nextBitToSet);
+        }
+
+        // Xor the sets together
+        BitVector b3 = new BitVector.from(b1);
+        b3.xor(b2);
+
+        // Examine each bit of b3 for errors
+        for (var x = 0; x < 256; x++) {
+          bool bit1 = b1[x];
+          bool bit2 = b2[x];
+          bool bit3 = b3[x];
+          if (!(bit3 == (boolXor(bit1, bit2)))) {
+            failCount++;
+          }
+        }
+      }
+
+      expect(failCount, 0);
+    });
   });
 }
+

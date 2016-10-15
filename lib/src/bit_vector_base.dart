@@ -1,7 +1,7 @@
 // Copyright (c) 2016, Kwang Yul Seo. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-import 'dart:math' show max;
+import 'dart:math' show max, min;
 import 'dart:typed_data';
 
 import 'package:fixnum/fixnum.dart';
@@ -55,6 +55,11 @@ class BitVector {
     _initWord(length);
   }
 
+  /// Creates a new [BitVector] instance that is equal to [other].
+  BitVector.from(BitVector other)
+      : _words = new Int64List.fromList(other._words),
+        _wordsInUse = other._wordsInUse;
+
   void _initWord(int length) {
     _words = new Int64List(_wordIndex(length - 1) + 1);
   }
@@ -67,7 +72,6 @@ class BitVector {
     int wordIndex = _wordIndex(bitIndex);
     return (wordIndex < _wordsInUse) &&
         ((_words[wordIndex] & (1 << (bitIndex & _bitMask)) != 0));
-
   }
 
   /// Sets the bit at the specified index to true.
@@ -112,6 +116,77 @@ class BitVector {
     while (_wordsInUse > 0) {
       _words[--_wordsInUse] = 0;
     }
+  }
+
+  /// Performs a logical `and`.
+  void and(BitVector other) {
+    if (identical(this, other)) return;
+
+    while (_wordsInUse > other._wordsInUse) {
+      _words[--_wordsInUse] = 0;
+    }
+
+    for (var i = 0; i < _wordsInUse; i++) {
+      _words[i] &= other._words[i];
+    }
+
+    _recalculateWordsInUse();
+  }
+
+  /// Performs a logical `or`.
+  void or(BitVector other) {
+    if (identical(this, other)) return;
+
+    int wordsInCommon = min(_wordsInUse, other._wordsInUse);
+
+    if (_wordsInUse < other._wordsInUse) {
+      _ensureCapacity(other._wordsInUse);
+      _wordsInUse = other._wordsInUse;
+    }
+
+    for (var i = 0; i < wordsInCommon; i++) {
+      _words[i] |= other._words[i];
+    }
+
+    // Copy any remaining words
+    if (wordsInCommon < other._wordsInUse) {
+      _words.setRange(
+          wordsInCommon, other._wordsInUse, other._words, wordsInCommon);
+    }
+
+    // _recalculateWordsInUse() is not necessary
+  }
+
+  /// Performs a logical `xor`.
+  void xor(BitVector other) {
+    int wordsInCommon = min(_wordsInUse, other._wordsInUse);
+
+    if (_wordsInUse < other._wordsInUse) {
+      _ensureCapacity(other._wordsInUse);
+      _wordsInUse = other._wordsInUse;
+    }
+
+    for (var i = 0; i < wordsInCommon; i++) {
+      _words[i] ^= other._words[i];
+    }
+
+    // Copy any remaining words
+    if (wordsInCommon < other._wordsInUse) {
+      _words.setRange(
+          wordsInCommon, other._wordsInUse, other._words, wordsInCommon);
+    }
+
+    _recalculateWordsInUse();
+  }
+
+  /// Clears all of the bits set in this [BitVector] whose corresponding bit is
+  /// set in [other].
+  void andNot(BitVector other) {
+    for (var i = min(_wordsInUse, other._wordsInUse) - 1; i >= 0; i--) {
+      _words[i] &= ~other._words[i];
+    }
+
+    _recalculateWordsInUse();
   }
 
   /// Given a bit index, returns word index containing it.
