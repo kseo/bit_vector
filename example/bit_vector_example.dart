@@ -6,8 +6,8 @@ import 'package:bit_vector/bit_vector.dart';
 main() {
   BitVector v = new BitVector();
   v.set(68);
-  print(v.get(68)); // true
+  print(v[68]); // true
   v.toggle(68);
-  print(v.get(68)); // false
+  print(v[68]); // false
 }
 
