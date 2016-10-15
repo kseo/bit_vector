@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- Fix broken example code
+
 ## 0.4.0
 
 - Add `andNot`, `and`, `or` and `xor` logical operators

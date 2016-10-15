@@ -1,6 +1,6 @@
 name: bit_vector
 description: A pure Dart memory-efficient packed representation for bit arrays
-version: 0.4.0
+version: 0.4.1
 author: Kwang Yul Seo <kwangyul.seo@gmail.com>
 homepage: https://github.com/kseo/bit_vector
 
