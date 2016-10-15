@@ -14,4 +14,4 @@ dartanalyzer $DARTANALYZER_FLAGS $libs
 
 # Run the tests.
 echo "Running tests..."
-pub run test:test
+pub run test:test --exclude-tags prop

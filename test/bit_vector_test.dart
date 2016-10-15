@@ -37,12 +37,12 @@ void main() {
     test('quickcheck implem matches model', () {
       final qc = new QuickCheck(maxSize: 500, seed: 42);
       qc.check(implemMatchesModelProp);
-    });
+    }, tags: "prop");
 
     test('smallcheck implem matches model', () {
       final sc = new SmallCheck(depth: 7);
       sc.check(implemMatchesModelProp);
-    });
+    }, tags: "prop");
 
     test('test []/set/clear/toggle', () {
       int failCount = 0;
