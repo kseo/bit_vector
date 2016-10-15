@@ -13,7 +13,7 @@
 ## 0.2.0
 
 - Add `isEmpty` and `isNotEmpty` getters
-- Add `cardinality()` method
+- Add `cardinality` getter
 - Override `hashCode` and `==`
 
 ## 0.1.0
