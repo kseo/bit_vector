@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- Add `andNot`, `and`, `or` and `xor` logical operators
+- Add `BitVector.from` constructor that creates a new BitVector instance
+  from the given BitVector
+
 ## 0.3.0
 
 - Breaking change - change `get` method to `[]` operator
