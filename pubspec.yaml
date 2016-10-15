@@ -11,4 +11,6 @@ dependencies:
   fixnum: ^0.10.5
 
 dev_dependencies:
+  enumerators: ^0.5.5
+  propcheck: ^0.5.1
   test: '>=0.12.0 <0.13.0'

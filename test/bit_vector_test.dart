@@ -4,7 +4,16 @@
 import 'dart:math';
 
 import 'package:bit_vector/bit_vector.dart';
+import 'package:propcheck/propcheck.dart';
 import 'package:test/test.dart';
+
+import 'src/traces.dart';
+
+final Property implemMatchesModelProp = forall(programs, (program) {
+  return sameTraces(
+      program.execute(implFactory),
+      program.execute(modelFactory));
+});
 
 Random generator = new Random();
 
@@ -25,6 +34,16 @@ bool boolXor(bool x, bool y) => (x && !y) || (!x && y);
 
 void main() {
   group('BitVector', () {
+    test('quickcheck implem matches model', () {
+      final qc = new QuickCheck(maxSize: 500, seed: 42);
+      qc.check(implemMatchesModelProp);
+    });
+
+    test('smallcheck implem matches model', () {
+      final sc = new SmallCheck(depth: 7);
+      sc.check(implemMatchesModelProp);
+    });
+
     test('test []/set/clear/toggle', () {
       int failCount = 0;
       for (int i = 0; i < 100; i++) {
