@@ -1,5 +1,6 @@
 # bit_vector
 
+[![Pub Package](https://img.shields.io/pub/v/bit_vector.svg)](https://pub.dartlang.org/packages/bit_vector)
 [![Build Status](https://travis-ci.org/kseo/bit_vector.svg?branch=master)](https://travis-ci.org/kseo/bit_vector)
 
 A pure Dart memory-efficient packed representation for bit arrays.
