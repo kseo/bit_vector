@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 
 import 'src/traces.dart';
 
-final Property implemMatchesModelProp = forall(programs, (program) {
+final Property implemMatchesModelProp = forall(programs, (Program program) {
   return sameTraces(
       program.execute(implFactory),
       program.execute(modelFactory));

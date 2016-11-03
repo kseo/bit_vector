@@ -72,16 +72,16 @@ class BitVector implements impl.BitVector {
   }
 
   @override
-  void and(BitVector other) => throw new UnimplementedError();
+  void and(impl.BitVector other) => throw new UnimplementedError();
 
   @override
-  void andNot(BitVector other) => throw new UnimplementedError();
+  void andNot(impl.BitVector other) => throw new UnimplementedError();
 
   @override
-  void or(BitVector other) => throw new UnimplementedError();
+  void or(impl.BitVector other) => throw new UnimplementedError();
 
   @override
-  void xor(BitVector other) => throw new UnimplementedError();
+  void xor(impl.BitVector other) => throw new UnimplementedError();
 
   void _expandTo(int bitIndex) {
     int lengthRequired = bitIndex + 1;

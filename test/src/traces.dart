@@ -38,10 +38,10 @@ class _Empty extends _ConstructorCall {
 }
 
 abstract class _Instruction {
-  _Result execute(impl.BitVector bv);
+  Result execute(impl.BitVector bv);
 }
 
-_Result _execute(f()) {
+Result _execute(f()) {
   try {
     return new _Value(f());
   } catch (error) {
@@ -57,7 +57,7 @@ class _Set extends _Instruction {
   String toString() => 'Set($i)';
 
   @override
-  _Result execute(impl.BitVector bv) => _execute(() => bv.set(i));
+  Result execute(impl.BitVector bv) => _execute(() => bv.set(i));
 }
 
 class _Get extends _Instruction {
@@ -68,7 +68,7 @@ class _Get extends _Instruction {
   String toString() => 'Get($i)';
 
   @override
-  _Result execute(impl.BitVector bv) => _execute(() => bv[i]);
+  Result execute(impl.BitVector bv) => _execute(() => bv[i]);
 }
 
 class _Toggle extends _Instruction {
@@ -79,7 +79,7 @@ class _Toggle extends _Instruction {
   String toString() => 'Toggle($i)';
 
   @override
-  _Result execute(impl.BitVector bv) => _execute(() => bv.toggle(i));
+  Result execute(impl.BitVector bv) => _execute(() => bv.toggle(i));
 }
 
 class _Clear extends _Instruction {
@@ -90,7 +90,7 @@ class _Clear extends _Instruction {
   String toString() => 'Clear($i)';
 
   @override
-  _Result execute(impl.BitVector bv) => _execute(() => bv.clear(i));
+  Result execute(impl.BitVector bv) => _execute(() => bv.clear(i));
 }
 
 class _ClearAll extends _Instruction {
@@ -100,20 +100,20 @@ class _ClearAll extends _Instruction {
   String toString() => 'ClearAll()';
 
   @override
-  _Result execute(impl.BitVector bv) => _execute(() => bv.clearAll());
+  Result execute(impl.BitVector bv) => _execute(() => bv.clearAll());
 }
 
-class _Program {
+class Program {
   final _ConstructorCall constructorCall;
   final List<_Instruction> instructions;
-  _Program(this.constructorCall, this.instructions);
+  Program(this.constructorCall, this.instructions);
 
   @override
   String toString() => 'Program($constructorCall, $instructions)';
 
-  List<_Result> execute(BitVectorFactory factory) {
+  List<Result> execute(BitVectorFactory factory) {
     final bv = constructorCall.execute(factory);
-    final result = [];
+    List<Result> result = [];
     for (final instruction in instructions) {
       result.add(instruction.execute(bv));
     }
@@ -121,11 +121,11 @@ class _Program {
   }
 }
 
-abstract class _Result {
-  bool same(_Result result);
+abstract class Result {
+  bool same(Result result);
 }
 
-class _Value extends _Result {
+class _Value extends Result {
   final Object value;
 
   _Value(this.value);
@@ -134,17 +134,17 @@ class _Value extends _Result {
   String toString() => 'Value($value)';
 
   @override
-  bool same(_Result result) => result is _Value && value == result.value;
+  bool same(Result result) => result is _Value && value == result.value;
 }
 
-class _Issue extends _Result {
+class _Issue extends Result {
   final Error error;
 
   _Issue(this.error);
 
   String toString() => 'Issue($error)';
 
-  bool same(_Result result) =>
+  bool same(Result result) =>
       result is _Issue && error.toString() == result.error.toString();
 }
 
@@ -166,14 +166,14 @@ final instructions = en.apply(_get, co.ints) +
 
 _program(_ConstructorCall constructorCall) =>
     (List<_Instruction> instructions) =>
-        new _Program(constructorCall, instructions);
+        new Program(constructorCall, instructions);
 
 final programs = en
     .singleton(_program)
     .apply(constructorCalls)
     .apply(co.listsOf(instructions));
 
-bool sameTraces(List<_Result> trace1, List<_Result> trace2) {
+bool sameTraces(List<Result> trace1, List<Result> trace2) {
   if (trace1.length != trace2.length) return false;
   for (var i = 0; i < trace1.length; i++) {
     if (!trace1[i].same(trace2[i])) return false;
