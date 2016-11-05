@@ -31,6 +31,7 @@ abstract class _ConstructorCall {
 class _Empty extends _ConstructorCall {
   _Empty();
 
+  @override
   String toString() => 'Empty()';
 
   @override
@@ -142,21 +143,23 @@ class _Issue extends Result {
 
   _Issue(this.error);
 
+  @override
   String toString() => 'Issue($error)';
 
+  @override
   bool same(Result result) =>
       result is _Issue && error.toString() == result.error.toString();
 }
 
-_empty() => new _Empty();
+_ConstructorCall _empty() => new _Empty();
 
 final constructorCalls = en.singleton(_empty());
 
-_get(int i) => new _Get(i);
-_set(int i) => new _Set(i);
-_toggle(int i) => new _Toggle(i);
-_clear(int i) => new _Clear(i);
-_clearAll() => new _ClearAll();
+_Instruction _get(int i) => new _Get(i);
+_Instruction _set(int i) => new _Set(i);
+_Instruction _toggle(int i) => new _Toggle(i);
+_Instruction _clear(int i) => new _Clear(i);
+_Instruction _clearAll() => new _ClearAll();
 
 final instructions = en.apply(_get, co.ints) +
     en.apply(_set, co.ints) +
@@ -164,6 +167,7 @@ final instructions = en.apply(_get, co.ints) +
     en.apply(_clear, co.ints) +
     en.singleton(_clearAll());
 
+// ignore: always_declare_return_types
 _program(_ConstructorCall constructorCall) =>
     (List<_Instruction> instructions) =>
         new Program(constructorCall, instructions);

@@ -21,6 +21,19 @@ class BitVector {
 
   int _wordsInUse = 0;
 
+  /// Creates a bit set whose initial length is [length].
+  BitVector([int length = _bitsPerWord]) {
+    if (length < 0)
+      throw new ArgumentError.value(length, 'length', 'length < 0');
+
+    _initWord(length);
+  }
+
+  /// Creates a new [BitVector] instance that is equal to [other].
+  BitVector.from(BitVector other)
+      : _words = new Int64List.fromList(other._words),
+        _wordsInUse = other._wordsInUse;
+
   /// True if this [BitVector] contains no bits that are set to true.
   bool get isEmpty => _wordsInUse == 0;
 
@@ -47,18 +60,6 @@ class BitVector {
     return sum;
   }
 
-  /// Creates a bit set whose initial length is [length].
-  BitVector([int length = _bitsPerWord]) {
-    if (length < 0)
-      throw new ArgumentError.value(length, 'length', 'length < 0');
-
-    _initWord(length);
-  }
-
-  /// Creates a new [BitVector] instance that is equal to [other].
-  BitVector.from(BitVector other)
-      : _words = new Int64List.fromList(other._words),
-        _wordsInUse = other._wordsInUse;
 
   void _initWord(int length) {
     _words = new Int64List(_wordIndex(length - 1) + 1);

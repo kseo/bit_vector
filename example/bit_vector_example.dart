@@ -3,7 +3,7 @@
 
 import 'package:bit_vector/bit_vector.dart';
 
-main() {
+void main() {
   BitVector v = new BitVector();
   v.set(68);
   print(v[68]); // true
